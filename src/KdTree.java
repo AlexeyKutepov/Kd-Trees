@@ -82,25 +82,25 @@ public class KdTree {
         if (p == null) {
             throw new NullPointerException();
         }
-        return searchPoint(root, p);
+        return search(root, p);
     }
 
-    private boolean searchPoint(Node node, Point2D p) {
+    private boolean search(Node node, Point2D p) {
         if (node != null) {
             if (node.getPoint().equals(p)) {
                 return true;
             } else {
                 if (node.isVertical()) {
                     if (node.getPoint().x() > p.x()) {
-                        return searchPoint(node.getLeft(), p);
+                        return search(node.getLeft(), p);
                     } else {
-                        return searchPoint(node.getRight(), p);
+                        return search(node.getRight(), p);
                     }
                 } else {
                     if (node.getPoint().y() > p.y()) {
-                        return searchPoint(node.getLeft(), p);
+                        return search(node.getLeft(), p);
                     } else {
-                        return searchPoint(node.getRight(), p);
+                        return search(node.getRight(), p);
                     }
                 }
             }
@@ -131,54 +131,83 @@ public class KdTree {
             return null;
         }
         Node node = root;
-        while (true) {
-            if (node.isVertical()) {
-                if (node.getPoint().x() < p.x()) {
-                    if (node.getLeft() != null) {
-                        if (node.getLeft().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
-                            node = node.getLeft();
-                        } else {
-                            break;
-                        }
-                    } else {
-                        break;
-                    }
-                } else {
-                    if (node.getRight() != null) {
-                        if (node.getRight().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
-                            node = node.getRight();
-                        } else {
-                            break;
-                        }
-                    } else {
-                        break;
-                    }
-                }
+//        while (true) {
+//            if (node.isVertical()) {
+//                if (node.getPoint().x() < p.x()) {
+//                    if (node.getLeft() != null) {
+//                        if (node.getLeft().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
+//                            node = node.getLeft();
+//                        } else {
+//                            break;
+//                        }
+//                    } else {
+//                        break;
+//                    }
+//                } else {
+//                    if (node.getRight() != null) {
+//                        if (node.getRight().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
+//                            node = node.getRight();
+//                        } else {
+//                            break;
+//                        }
+//                    } else {
+//                        break;
+//                    }
+//                }
+//            } else {
+//                if (node.getPoint().y() < p.y()) {
+//                    if (node.getLeft() != null) {
+//                        if (node.getLeft().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
+//                            node = node.getLeft();
+//                        } else {
+//                            break;
+//                        }
+//                    } else {
+//                        break;
+//                    }
+//                } else {
+//                    if (node.getRight() != null) {
+//                        if (node.getRight().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
+//                            node = node.getRight();
+//                        } else {
+//                            break;
+//                        }
+//                    } else {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+        return nearest(node, p);
+    }
+
+    private Point2D nearest(Node node, Point2D point2D) {
+        double rootDistance = node.getPoint().distanceTo(point2D);
+        double leftDistance = Double.POSITIVE_INFINITY;
+        double rightDistance = Double.POSITIVE_INFINITY;
+        if (node.getLeft() != null) {
+            leftDistance = node.getLeft().getPoint().distanceTo(point2D);
+        }
+        if (node.getRight() != null) {
+            rightDistance = node.getRight().getPoint().distanceTo(point2D);
+        }
+        if (leftDistance < rootDistance || rightDistance < rootDistance) {
+            if (leftDistance < rightDistance) {
+                return nearest(node.getLeft(), point2D);
+            } else if (leftDistance > rightDistance) {
+                return nearest(node.getRight(), point2D);
             } else {
-                if (node.getPoint().y() < p.y()) {
-                    if (node.getLeft() != null) {
-                        if (node.getLeft().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
-                            node = node.getLeft();
-                        } else {
-                            break;
-                        }
-                    } else {
-                        break;
-                    }
+                Point2D point2D1 = nearest(node.getLeft(), point2D);
+                Point2D point2D2 = nearest(node.getRight(), point2D);
+                if (point2D1.distanceTo(point2D) < point2D2.distanceTo(point2D)) {
+                    return point2D1;
                 } else {
-                    if (node.getRight() != null) {
-                        if (node.getRight().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
-                            node = node.getRight();
-                        } else {
-                            break;
-                        }
-                    } else {
-                        break;
-                    }
+                    return point2D2;
                 }
             }
+        } else {
+            return node.getPoint();
         }
-        return node.getPoint();
     }
 
 
