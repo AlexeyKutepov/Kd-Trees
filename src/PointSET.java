@@ -64,8 +64,18 @@ public class PointSET {
         if (p == null) {
             throw new NullPointerException();
         }
+        Point2D point2DNearst = null;
+        for (Point2D point2D : tree) {
+            if (point2DNearst == null) {
+                point2DNearst = point2D;
+            } else {
+                if (p.distanceTo(point2D) < p.distanceTo(point2DNearst)) {
+                    point2DNearst = point2D;
+                }
+            }
+        }
 
-        return null;
+        return point2DNearst;
     }
 
     // unit testing of the methods (optional)
