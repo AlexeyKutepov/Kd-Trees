@@ -1,3 +1,7 @@
+import java.awt.geom.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Alexey Kutepov on 28.02.15.
  */
@@ -119,7 +123,90 @@ public class KdTree {
         if (rect == null) {
             throw new NullPointerException();
         }
-        return null;
+        Node node = root;
+        List<Point2D> point2DList = new ArrayList<Point2D>();
+        range(rect, node, point2DList);
+        return point2DList;
+    }
+
+    private void range(RectHV rect, Node node, List<Point2D> point2DList) {
+      if (node == null) {
+        return;
+      }
+      if (rect.contains(node.getPoint())) {
+        point2DList.add(node.getPoint());
+      }
+      if (node.isVertical) {
+        if (node.getLeft() != null) {
+          double yminLeft = 0;
+          double ymaxLeft = node.getLeft().getPoint().y();
+          double xminLeft;
+          double xmaxLeft;
+          if (node.getPoint().x() > node.getLeft().getPoint().x()) {
+            xminLeft = 0;
+            xmaxLeft = node.getPoint().x();
+          } else {
+            xminLeft = node.getPoint().x();
+            xmaxLeft = 1;
+          }
+          RectHV rectHV = new RectHV(xminLeft, yminLeft, xmaxLeft, ymaxLeft);
+          if (rect.intersects(rectHV)) {
+            range(rect, node.getLeft(), point2DList);
+          }
+        }
+        if (node.getRight() != null) {
+          double yminRight = node.getRight().getPoint().y();
+          double ymaxRight = 1;
+          double xminRight;
+          double xmaxRight;
+          if (node.getPoint().x() > node.getRight().getPoint().x()) {
+            xminRight = 0;
+            xmaxRight = node.getPoint().x();
+          } else {
+            xminRight = node.getPoint().x();
+            xmaxRight = 1;
+          }
+          RectHV rectHV = new RectHV(xminRight, yminRight, xmaxRight, ymaxRight);
+          if (rect.intersects(rectHV)) {
+            range(rect, node.getRight(), point2DList);
+          }
+        }
+      } else {
+        if (node.getLeft() != null) {
+          double yminLeft;
+          double ymaxLeft;
+          double xminLeft = 0;
+          double xmaxLeft = node.getLeft().getPoint().x();
+          if (node.getPoint().y() > node.getLeft().getPoint().y()) {
+            yminLeft = 0;
+            ymaxLeft = node.getPoint().y();
+          } else {
+            yminLeft = node.getPoint().y();
+            ymaxLeft = 1;
+          }
+          RectHV rectHV = new RectHV(xminLeft, yminLeft, xmaxLeft, ymaxLeft);
+          if (rect.intersects(rectHV)) {
+            range(rect, node.getLeft(), point2DList);
+          }
+        }
+        if (node.getRight() != null) {
+          double yminRight;
+          double ymaxRight;
+          double xminRight = node.getRight().getPoint().x();
+          double xmaxRight = 1;
+          if (node.getPoint().y() > node.getRight().getPoint().y()) {
+            yminRight = 0;
+            ymaxRight = node.getPoint().y();
+          } else {
+            yminRight = node.getPoint().y();
+            ymaxRight = 1;
+          }
+          RectHV rectHV = new RectHV(xminRight, yminRight, xmaxRight, ymaxRight);
+          if (rect.intersects(rectHV)) {
+            range(rect, node.getRight(), point2DList);
+          }
+        }
+      }
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
