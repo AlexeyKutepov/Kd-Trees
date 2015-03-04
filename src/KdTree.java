@@ -115,7 +115,16 @@ public class KdTree {
 
     // draw all points to standard draw
     public void draw() {
+      Node node = root;
+    }
 
+    private void draw(Node node) {
+      if (node == null) {
+        return;
+      }
+      node.getPoint().draw();
+      draw(node.getLeft());
+      draw(node.getRight());
     }
 
     // all points that are inside the rectangle
