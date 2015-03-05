@@ -1,4 +1,3 @@
-import java.awt.geom.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -228,7 +227,6 @@ public class KdTree {
         }
         Node node = root;
        return nearest(node, p, node.getPoint());
-//      return null;
     }
 
     private Point2D nearest(Node node, Point2D point2D, Point2D nearstPoint) {
@@ -331,9 +329,9 @@ public class KdTree {
         private Node left;
         private Node right;
 
-        private Node(Point2D point, boolean isVertical) {
-            this.point = point;
-            this.isVertical = isVertical;
+        private Node(Point2D pointIn, boolean isVerticalIn) {
+            this.point = pointIn;
+            this.isVertical = isVerticalIn;
             this.left = null;
             this.right = null;
         }
@@ -342,32 +340,32 @@ public class KdTree {
             return point;
         }
 
-        public void setPoint(Point2D point) {
-            this.point = point;
+        public void setPoint(Point2D pointIn) {
+            this.point = pointIn;
         }
 
         public boolean isVertical() {
             return isVertical;
         }
 
-        public void setVertical(boolean isVertical) {
-            this.isVertical = isVertical;
+        public void setVertical(boolean isVerticalIn) {
+            this.isVertical = isVerticalIn;
         }
 
         public Node getLeft() {
             return left;
         }
 
-        public void setLeft(Node left) {
-            this.left = left;
+        public void setLeft(Node leftIn) {
+            this.left = leftIn;
         }
 
         public Node getRight() {
             return right;
         }
 
-        public void setRight(Node right) {
-            this.right = right;
+        public void setRight(Node rightIn) {
+            this.right = rightIn;
         }
     }
 
