@@ -233,7 +233,7 @@ public class KdTree {
 
     private Point2D nearest(Node node, Point2D point2D, Point2D nearstPoint) {
       Point2D bestPoint;
-      if (node.getPoint().distanceTo(point2D) < nearstPoint.distanceTo(point2D)) {
+      if (node.getPoint().distanceSquaredTo(point2D) < nearstPoint.distanceSquaredTo(point2D)) {
         bestPoint = node.getPoint();
       } else {
         bestPoint = nearstPoint;
@@ -242,11 +242,6 @@ public class KdTree {
           if (node.isVertical) {
             double yminLeft = 0;
             double ymaxLeft = 1;
-            if (bestPoint.y() > node.getLeft().getPoint().y()) {
-              ymaxLeft = bestPoint.y();
-            } else {
-              yminLeft = bestPoint.y();
-            }
             double xminLeft;
             double xmaxLeft;
             if (node.getPoint().x() > node.getLeft().getPoint().x()) {
@@ -257,9 +252,9 @@ public class KdTree {
               xmaxLeft = 1;
             }
             RectHV rectHV = new RectHV(xminLeft, yminLeft, xmaxLeft, ymaxLeft);
-            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceTo(bestPoint)) {
+            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceSquaredTo(bestPoint)) {
               Point2D bufPoint = nearest(node.getLeft(), point2D, bestPoint);
-              if (point2D.distanceTo(bestPoint) > point2D.distanceTo(bufPoint)) {
+              if (point2D.distanceSquaredTo(bestPoint) > point2D.distanceSquaredTo(bufPoint)) {
                 bestPoint = bufPoint;
               }
             }
@@ -268,11 +263,6 @@ public class KdTree {
             double ymaxLeft;
             double xminLeft = 0;
             double xmaxLeft = 1;
-            if (bestPoint.x() > node.getLeft().getPoint().x()) {
-              xmaxLeft = bestPoint.x();
-            } else {
-              xminLeft = bestPoint.x();
-            }
             if (node.getPoint().y() > node.getLeft().getPoint().y()) {
               yminLeft = 0;
               ymaxLeft = node.getPoint().y();
@@ -281,9 +271,9 @@ public class KdTree {
               ymaxLeft = 1;
             }
             RectHV rectHV = new RectHV(xminLeft, yminLeft, xmaxLeft, ymaxLeft);
-            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceTo(bestPoint)) {
+            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceSquaredTo(bestPoint)) {
               Point2D bufPoint = nearest(node.getLeft(), point2D, bestPoint);
-              if (point2D.distanceTo(bestPoint) > point2D.distanceTo(bufPoint)) {
+              if (point2D.distanceSquaredTo(bestPoint) > point2D.distanceSquaredTo(bufPoint)) {
                 bestPoint = bufPoint;
               }
             }
@@ -293,11 +283,6 @@ public class KdTree {
           if (node.isVertical) {
             double ymaxRight = 1;
             double yminRight = 0;
-            if (bestPoint.y() > node.getRight().getPoint().y()) {
-              ymaxRight = bestPoint.y();
-            } else {
-              yminRight = bestPoint.y();
-            }
             double xminRight;
             double xmaxRight;
             if (node.getPoint().x() > node.getRight().getPoint().x()) {
@@ -308,9 +293,9 @@ public class KdTree {
               xmaxRight = 1;
             }
             RectHV rectHV = new RectHV(xminRight, yminRight, xmaxRight, ymaxRight);
-            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceTo(bestPoint)) {
+            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceSquaredTo(bestPoint)) {
               Point2D bufPoint = nearest(node.getRight(), point2D, bestPoint);
-              if (point2D.distanceTo(bestPoint) > point2D.distanceTo(bufPoint)) {
+              if (point2D.distanceSquaredTo(bestPoint) > point2D.distanceSquaredTo(bufPoint)) {
                 bestPoint = bufPoint;
               }
             }
@@ -319,11 +304,6 @@ public class KdTree {
             double ymaxRight;
             double xminRight = 0;
             double xmaxRight = 1;
-            if (bestPoint.x() > node.getRight().getPoint().x()) {
-              xmaxRight = bestPoint.x();
-            } else {
-              xminRight = bestPoint.x();
-            }
             if (node.getPoint().y() > node.getRight().getPoint().y()) {
               yminRight = 0;
               ymaxRight = node.getPoint().y();
@@ -332,9 +312,9 @@ public class KdTree {
               ymaxRight = 1;
             }
             RectHV rectHV = new RectHV(xminRight, yminRight, xmaxRight, ymaxRight);
-            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceTo(bestPoint)) {
+            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceSquaredTo(bestPoint)) {
               Point2D bufPoint = nearest(node.getRight(), point2D, bestPoint);
-              if (point2D.distanceTo(bestPoint) > point2D.distanceTo(bufPoint)) {
+              if (point2D.distanceSquaredTo(bestPoint) > point2D.distanceSquaredTo(bufPoint)) {
                 bestPoint = bufPoint;
               }
             }
