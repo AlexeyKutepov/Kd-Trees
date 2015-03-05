@@ -134,11 +134,11 @@ public class KdTree {
         }
         Node node = root;
         List<Point2D> point2DList = new ArrayList<Point2D>();
-        range(rect, node, point2DList);
+        range(rect, node, point2DList, null);
         return point2DList;
     }
 
-    private void range(RectHV rect, Node node, List<Point2D> point2DList) {
+    private void range(RectHV rect, Node node, List<Point2D> point2DList, Point2D parent) {
       if (node == null) {
         return;
       }
@@ -148,9 +148,7 @@ public class KdTree {
       if (node.isVertical) {
         if (node.getLeft() != null) {
           double yminLeft = 0;
-          double ymaxLeft = node.getLeft().getPoint().y();
-          double yminLeft1 = node.getLeft().getPoint().y();
-          double ymaxLeft1 = 1;
+          double ymaxLeft = 1;
           double xminLeft;
           double xmaxLeft;
           if (node.getPoint().x() > node.getLeft().getPoint().x()) {
@@ -162,19 +160,12 @@ public class KdTree {
           }
           RectHV rectHV = new RectHV(xminLeft, yminLeft, xmaxLeft, ymaxLeft);
           if (rect.intersects(rectHV)) {
-            range(rect, node.getLeft(), point2DList);
-          } else {
-            RectHV rectHV1 = new RectHV(xminLeft, yminLeft1, xmaxLeft, ymaxLeft1);
-            if (rect.intersects(rectHV1)) {
-              range(rect, node.getLeft(), point2DList);
-            }
+            range(rect, node.getLeft(), point2DList, node.getPoint());
           }
         }
         if (node.getRight() != null) {
-          double yminRight = node.getRight().getPoint().y();
+          double yminRight = 0;
           double ymaxRight = 1;
-          double yminRight1 = 0;
-          double ymaxRight1 = node.getRight().getPoint().y();
           double xminRight;
           double xmaxRight;
           if (node.getPoint().x() > node.getRight().getPoint().x()) {
@@ -186,12 +177,7 @@ public class KdTree {
           }
           RectHV rectHV = new RectHV(xminRight, yminRight, xmaxRight, ymaxRight);
           if (rect.intersects(rectHV)) {
-            range(rect, node.getRight(), point2DList);
-          } else {
-            RectHV rectHV1 = new RectHV(xminRight, yminRight1, xmaxRight, ymaxRight1);
-            if (rect.intersects(rectHV1)) {
-              range(rect, node.getRight(), point2DList);
-            }
+            range(rect, node.getRight(), point2DList, node.getPoint());
           }
         }
       } else {
@@ -199,9 +185,7 @@ public class KdTree {
           double yminLeft;
           double ymaxLeft;
           double xminLeft = 0;
-          double xmaxLeft = node.getLeft().getPoint().x();
-          double xminLeft1 = node.getLeft().getPoint().x();
-          double xmaxLeft1 = 1;
+          double xmaxLeft = 1;
           if (node.getPoint().y() > node.getLeft().getPoint().y()) {
             yminLeft = 0;
             ymaxLeft = node.getPoint().y();
@@ -211,20 +195,13 @@ public class KdTree {
           }
           RectHV rectHV = new RectHV(xminLeft, yminLeft, xmaxLeft, ymaxLeft);
           if (rect.intersects(rectHV)) {
-            range(rect, node.getLeft(), point2DList);
-          } else {
-            RectHV rectHV1 = new RectHV(xminLeft1, yminLeft, xmaxLeft1, ymaxLeft);
-            if (rect.intersects(rectHV1)) {
-              range(rect, node.getLeft(), point2DList);
-            }
+            range(rect, node.getLeft(), point2DList, node.getPoint());
           }
         }
         if (node.getRight() != null) {
           double yminRight;
           double ymaxRight;
-          double xminRight1 = 0;
-          double xmaxRight1 = node.getRight().getPoint().x();
-          double xminRight = node.getRight().getPoint().x();
+          double xminRight = 0;
           double xmaxRight = 1;
           if (node.getPoint().y() > node.getRight().getPoint().y()) {
             yminRight = 0;
@@ -235,12 +212,7 @@ public class KdTree {
           }
           RectHV rectHV = new RectHV(xminRight, yminRight, xmaxRight, ymaxRight);
           if (rect.intersects(rectHV)) {
-            range(rect, node.getRight(), point2DList);
-          } else {
-            RectHV rectHV1 = new RectHV(xminRight1, yminRight, xmaxRight1, ymaxRight);
-            if (rect.intersects(rectHV1)) {
-              range(rect, node.getRight(), point2DList);
-            }
+            range(rect, node.getRight(), point2DList, node.getPoint());
           }
         }
       }
@@ -255,7 +227,8 @@ public class KdTree {
             return null;
         }
         Node node = root;
-        return nearest(node, p, node.getPoint());
+       // return nearest(node, p, node.getPoint());
+      return null;
     }
 
     private Point2D nearest(Node node, Point2D point2D, Point2D nearstPoint) {
@@ -269,6 +242,11 @@ public class KdTree {
           if (node.isVertical) {
             double yminLeft = 0;
             double ymaxLeft = 1;
+            if (bestPoint.y() > node.getLeft().getPoint().y()) {
+              ymaxLeft = bestPoint.y();
+            } else {
+              yminLeft = bestPoint.y();
+            }
             double xminLeft;
             double xmaxLeft;
             if (node.getPoint().x() > node.getLeft().getPoint().x()) {
@@ -290,6 +268,11 @@ public class KdTree {
             double ymaxLeft;
             double xminLeft = 0;
             double xmaxLeft = 1;
+            if (bestPoint.x() > node.getLeft().getPoint().x()) {
+              xmaxLeft = bestPoint.x();
+            } else {
+              xminLeft = bestPoint.x();
+            }
             if (node.getPoint().y() > node.getLeft().getPoint().y()) {
               yminLeft = 0;
               ymaxLeft = node.getPoint().y();
@@ -310,6 +293,11 @@ public class KdTree {
           if (node.isVertical) {
             double ymaxRight = 1;
             double yminRight = 0;
+            if (bestPoint.y() > node.getRight().getPoint().y()) {
+              ymaxRight = bestPoint.y();
+            } else {
+              yminRight = bestPoint.y();
+            }
             double xminRight;
             double xmaxRight;
             if (node.getPoint().x() > node.getRight().getPoint().x()) {
@@ -331,6 +319,11 @@ public class KdTree {
             double ymaxRight;
             double xminRight = 0;
             double xmaxRight = 1;
+            if (bestPoint.x() > node.getRight().getPoint().x()) {
+              xmaxRight = bestPoint.x();
+            } else {
+              xminRight = bestPoint.x();
+            }
             if (node.getPoint().y() > node.getRight().getPoint().y()) {
               yminRight = 0;
               ymaxRight = node.getPoint().y();
