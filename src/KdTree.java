@@ -134,11 +134,11 @@ public class KdTree {
         }
         Node node = root;
         List<Point2D> point2DList = new ArrayList<Point2D>();
-        range(rect, node, point2DList, null);
+        range(rect, node, point2DList);
         return point2DList;
     }
 
-    private void range(RectHV rect, Node node, List<Point2D> point2DList, Point2D parent) {
+    private void range(RectHV rect, Node node, List<Point2D> point2DList) {
       if (node == null) {
         return;
       }
@@ -160,7 +160,7 @@ public class KdTree {
           }
           RectHV rectHV = new RectHV(xminLeft, yminLeft, xmaxLeft, ymaxLeft);
           if (rect.intersects(rectHV)) {
-            range(rect, node.getLeft(), point2DList, node.getPoint());
+            range(rect, node.getLeft(), point2DList);
           }
         }
         if (node.getRight() != null) {
@@ -177,7 +177,7 @@ public class KdTree {
           }
           RectHV rectHV = new RectHV(xminRight, yminRight, xmaxRight, ymaxRight);
           if (rect.intersects(rectHV)) {
-            range(rect, node.getRight(), point2DList, node.getPoint());
+            range(rect, node.getRight(), point2DList);
           }
         }
       } else {
@@ -195,7 +195,7 @@ public class KdTree {
           }
           RectHV rectHV = new RectHV(xminLeft, yminLeft, xmaxLeft, ymaxLeft);
           if (rect.intersects(rectHV)) {
-            range(rect, node.getLeft(), point2DList, node.getPoint());
+            range(rect, node.getLeft(), point2DList);
           }
         }
         if (node.getRight() != null) {
@@ -212,7 +212,7 @@ public class KdTree {
           }
           RectHV rectHV = new RectHV(xminRight, yminRight, xmaxRight, ymaxRight);
           if (rect.intersects(rectHV)) {
-            range(rect, node.getRight(), point2DList, node.getPoint());
+            range(rect, node.getRight(), point2DList);
           }
         }
       }
@@ -227,8 +227,8 @@ public class KdTree {
             return null;
         }
         Node node = root;
-       // return nearest(node, p, node.getPoint());
-      return null;
+       return nearest(node, p, node.getPoint());
+//      return null;
     }
 
     private Point2D nearest(Node node, Point2D point2D, Point2D nearstPoint) {
