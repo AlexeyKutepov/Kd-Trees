@@ -255,83 +255,99 @@ public class KdTree {
             return null;
         }
         Node node = root;
-//        while (true) {
-//            if (node.isVertical()) {
-//                if (node.getPoint().x() < p.x()) {
-//                    if (node.getLeft() != null) {
-//                        if (node.getLeft().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
-//                            node = node.getLeft();
-//                        } else {
-//                            break;
-//                        }
-//                    } else {
-//                        break;
-//                    }
-//                } else {
-//                    if (node.getRight() != null) {
-//                        if (node.getRight().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
-//                            node = node.getRight();
-//                        } else {
-//                            break;
-//                        }
-//                    } else {
-//                        break;
-//                    }
-//                }
-//            } else {
-//                if (node.getPoint().y() < p.y()) {
-//                    if (node.getLeft() != null) {
-//                        if (node.getLeft().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
-//                            node = node.getLeft();
-//                        } else {
-//                            break;
-//                        }
-//                    } else {
-//                        break;
-//                    }
-//                } else {
-//                    if (node.getRight() != null) {
-//                        if (node.getRight().getPoint().distanceTo(p) < node.getPoint().distanceTo(p)) {
-//                            node = node.getRight();
-//                        } else {
-//                            break;
-//                        }
-//                    } else {
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-        return nearest(node, p);
+        return nearest(node, p, node.getPoint());
     }
 
-    private Point2D nearest(Node node, Point2D point2D) {
-        double rootDistance = node.getPoint().distanceTo(point2D);
-        double leftDistance = Double.POSITIVE_INFINITY;
-        double rightDistance = Double.POSITIVE_INFINITY;
+    private Point2D nearest(Node node, Point2D point2D, Point2D nearstPoint) {
+      Point2D bestPoint;
+      if (node.getPoint().distanceTo(point2D) < nearstPoint.distanceTo(point2D)) {
+        bestPoint = node.getPoint();
+      } else {
+        bestPoint = nearstPoint;
+      }
         if (node.getLeft() != null) {
-            leftDistance = node.getLeft().getPoint().distanceTo(point2D);
+          if (node.isVertical) {
+            double yminLeft = 0;
+            double ymaxLeft = 1;
+            double xminLeft;
+            double xmaxLeft;
+            if (node.getPoint().x() > node.getLeft().getPoint().x()) {
+              xminLeft = 0;
+              xmaxLeft = node.getPoint().x();
+            } else {
+              xminLeft = node.getPoint().x();
+              xmaxLeft = 1;
+            }
+            RectHV rectHV = new RectHV(xminLeft, yminLeft, xmaxLeft, ymaxLeft);
+            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceTo(bestPoint)) {
+              Point2D bufPoint = nearest(node.getLeft(), point2D, bestPoint);
+              if (point2D.distanceTo(bestPoint) > point2D.distanceTo(bufPoint)) {
+                bestPoint = bufPoint;
+              }
+            }
+          } else {
+            double yminLeft;
+            double ymaxLeft;
+            double xminLeft = 0;
+            double xmaxLeft = 1;
+            if (node.getPoint().y() > node.getLeft().getPoint().y()) {
+              yminLeft = 0;
+              ymaxLeft = node.getPoint().y();
+            } else {
+              yminLeft = node.getPoint().y();
+              ymaxLeft = 1;
+            }
+            RectHV rectHV = new RectHV(xminLeft, yminLeft, xmaxLeft, ymaxLeft);
+            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceTo(bestPoint)) {
+              Point2D bufPoint = nearest(node.getLeft(), point2D, bestPoint);
+              if (point2D.distanceTo(bestPoint) > point2D.distanceTo(bufPoint)) {
+                bestPoint = bufPoint;
+              }
+            }
+          }
         }
         if (node.getRight() != null) {
-            rightDistance = node.getRight().getPoint().distanceTo(point2D);
-        }
-        if (leftDistance < rootDistance || rightDistance < rootDistance) {
-            if (leftDistance < rightDistance) {
-                return nearest(node.getLeft(), point2D);
-            } else if (leftDistance > rightDistance) {
-                return nearest(node.getRight(), point2D);
+          if (node.isVertical) {
+            double ymaxRight = 1;
+            double yminRight = 0;
+            double xminRight;
+            double xmaxRight;
+            if (node.getPoint().x() > node.getRight().getPoint().x()) {
+              xminRight = 0;
+              xmaxRight = node.getPoint().x();
             } else {
-                Point2D point2D1 = nearest(node.getLeft(), point2D);
-                Point2D point2D2 = nearest(node.getRight(), point2D);
-                if (point2D1.distanceTo(point2D) < point2D2.distanceTo(point2D)) {
-                    return point2D1;
-                } else {
-                    return point2D2;
-                }
+              xminRight = node.getPoint().x();
+              xmaxRight = 1;
             }
-        } else {
-            return node.getPoint();
+            RectHV rectHV = new RectHV(xminRight, yminRight, xmaxRight, ymaxRight);
+            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceTo(bestPoint)) {
+              Point2D bufPoint = nearest(node.getRight(), point2D, bestPoint);
+              if (point2D.distanceTo(bestPoint) > point2D.distanceTo(bufPoint)) {
+                bestPoint = bufPoint;
+              }
+            }
+          } else {
+            double yminRight;
+            double ymaxRight;
+            double xminRight = 0;
+            double xmaxRight = 1;
+            if (node.getPoint().y() > node.getRight().getPoint().y()) {
+              yminRight = 0;
+              ymaxRight = node.getPoint().y();
+            } else {
+              yminRight = node.getPoint().y();
+              ymaxRight = 1;
+            }
+            RectHV rectHV = new RectHV(xminRight, yminRight, xmaxRight, ymaxRight);
+            if (rectHV.distanceSquaredTo(point2D) < point2D.distanceTo(bestPoint)) {
+              Point2D bufPoint = nearest(node.getRight(), point2D, bestPoint);
+              if (point2D.distanceTo(bestPoint) > point2D.distanceTo(bufPoint)) {
+                bestPoint = bufPoint;
+              }
+            }
+          }
         }
+        return bestPoint;
     }
 
 
